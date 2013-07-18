@@ -1,0 +1,50 @@
+$dotSize: 30px;
+$margin: 10px;
+
+$g: #8deb95;
+$p: #9561b4;
+$r: #ef5e43;
+$b: #8cbdff;
+$y: #eadb2a;
+
+$classes: 'g', 'p', 'r', 'b', 'y';
+$colors: $g, $p, $r, $b, $y;
+
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+body { background: #fff; }
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+	position: relative;
+	width: $dotSize + ( $margin * 2 );
+	height: ($dotSize + $margin + $margin) * 6;
+
+	li {
+		display: block;
+		margin: ($margin * 2) $margin;
+		padding: 0;
+		width: $dotSize;
+		height: $dotSize;
+		border-radius: 50%;
+		position: absolute;
+		transition: 400ms all;
+		bottom: ($dotSize + $margin + $margin) * 8;
+
+		@for $i from 1 through 6 {
+			&:nth-child(#{$i}) {
+				bottom: ($dotSize + $margin + $margin) * ( $i - 1 ) - $margin;
+			}
+		}
+
+		@for $i from 1 through 5 {
+			&.#{nth($classes, $i)} {
+				background: nth($colors, $i);
+				&.active {
+					box-shadow: 0 0 0 2px #fff, 0 0 15px 2px nth($colors, $i);
+				}
+			}
+		}
+	}
+}
