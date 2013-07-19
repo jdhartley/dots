@@ -3,6 +3,7 @@ var DOTS = (function()
 	var colors = ['g','p','r','b','y'],
 		flag = false,
 		color,
+		dots = [],
 
 		_init = function()
 		{
@@ -24,16 +25,36 @@ var DOTS = (function()
 				{
 					flag = true;
 					color = $(this).attr('class').replace('active', '').trim();
+					dots.push( this );
 				})
 				.on('mousemove', 'li', function()
 				{
-					if ( flag && color === $(this).attr('class').replace('active', '').trim() )
-						$(this).addClass('active');
+					// Are we touching?
+					if ( ! flag )
+						return;
+
+					// Is this dot the right color?
+					if ( color !== $(this).attr('class').replace('active', '').trim() )
+						return;
+
+					// Test if this is an adjacent dot
+					var isAdjacent = true,
+						index = $('li').index( $(this) );
+
+					// if ( index )
+
+					// This dot is awesome! Let's make it active
+					$(this).addClass('active');
+					dots.push( this );
 				})
 				.on('mouseup', function()
 				{
 					flag = false;
-					$('li.active').trigger('remove');
+					if ( dots.length > 1 )
+					{
+						$(dots).trigger('remove');
+					}
+					dots = [];
 				})
 				.on('remove', 'li', function()
 				{

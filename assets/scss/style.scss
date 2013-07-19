@@ -35,16 +35,17 @@ ul {
 		@for $i from 1 through 6 {
 			&:nth-child(#{$i}) {
 				bottom: ($dotSize + $margin + $margin) * ( $i - 1 ) - $margin;
+				z-index: 7 - $i;
 			}
 		}
 
 		@for $i from 1 through 5 {
 			&.#{nth($classes, $i)} {
-				background: nth($colors, $i);
-				&.active {
-					box-shadow: 0 0 0 2px #fff, 0 0 15px 2px nth($colors, $i);
-				}
+				color: nth($colors, $i);
 			}
 		}
+
+		background: currentColor;
+		&.active { box-shadow: 0 0 0 2px #fff, 0 0 15px 2px currentColor; }
 	}
 }
