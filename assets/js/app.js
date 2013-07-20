@@ -70,7 +70,8 @@ var DOTS = (function()
 				})
 				.on('remove', 'li', function()
 				{
-					$(this).remove();
+					var self = this;
+					setTimeout( function() {$(self).remove();}, 0 );
 				})
 
 		}
