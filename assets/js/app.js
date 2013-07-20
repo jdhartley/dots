@@ -57,13 +57,19 @@ var DOTS = (function()
 					flag = false;
 					if ( dots.length > 1 )
 					{
+						// add the new dot above before removing the old dot
+						console.log(dots);
+						$(dots).trigger('append');
 						$(dots).trigger('remove');
 					}
 					dots = [];
 				})
-				.on('remove', 'li', function()
+				.on('append', 'li', function()
 				{
 					$(this).parent().append( newDot() );
+				})
+				.on('remove', 'li', function()
+				{
 					$(this).remove();
 				})
 
