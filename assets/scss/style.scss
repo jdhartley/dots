@@ -10,16 +10,21 @@ $y: #eadb2a;
 $classes: 'g', 'p', 'r', 'b', 'y';
 $colors: $g, $p, $r, $b, $y;
 
-html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
 body { background: #fff; }
 ul {
 	margin: 0;
-	padding: 0;
+	padding: 30px 0;
 	list-style: none;
-	float: left;
-	position: relative;
+	position: absolute;
+	top: 0; bottom: 0;
 	width: $dotSize + ( $margin * 2 );
-	height: ($dotSize + $margin + $margin) * 6;
+
+	@for $i from 1 through 6 {
+		&:nth-child(#{$i}) {
+			left: ( $dotSize + ( $margin * 2 ) ) * ( $i - 1 );
+		}
+	}
 
 	li {
 		display: block;
@@ -29,13 +34,19 @@ ul {
 		height: $dotSize;
 		border-radius: 50%;
 		position: absolute;
-		transition: 400ms all;
 		bottom: ($dotSize + $margin + $margin) * 8;
 
-		@for $i from 1 through 6 {
+		-webkit-transition: 600ms bottom, 400ms box-shadow;
+		transition: 600ms bottom, 400ms box-shadow;
+
+		// kick in GPU
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+
+
+		@for $i from 1 through 12 {
 			&:nth-child(#{$i}) {
 				bottom: ($dotSize + $margin + $margin) * ( $i - 1 ) - $margin;
-				z-index: 7 - $i;
 			}
 		}
 
