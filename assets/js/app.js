@@ -27,20 +27,15 @@ var DOTS = (function()
 				.on('mousedown touchstart', 'li', function(e)
 				{
 					e.preventDefault();
+					e = _fixTouchEvent(e);
+					var that = document.elementFromPoint(e.pageX, e.pageY);
 					flag = true;
-					color = $(this).addClass('active').attr('class').replace('active', '').trim();
-					dots.push( this );
+					color = $(that).addClass('active').attr('class').replace('active', '').trim();
+					dots.push( that );
 				})
 				.on('mousemove touchmove', 'li', function(e)
 				{
-					if ( e.originalEvent.touches && e.originalEvent.touches.length )
-					{
-						e = e.originalEvent.touches[0];
-					}
-					else if ( e.originalEvent.changedTouches && e.originalEvent.changedTouches.length )
-					{
-						e = e.originalEvent.changedTouches[0];
-					}
+					e = _fixTouchEvent(e);
 					var that = document.elementFromPoint(e.pageX, e.pageY);
 
 					// Are we even touching?
@@ -112,6 +107,18 @@ var DOTS = (function()
 		newDot = function()
 		{
 			return $('<li/>').addClass( colors[ Math.floor(Math.random() * 5) ] ).attr('id', 'd' + ++count);
+		}
+		_fixTouchEvent = function(e)
+		{
+			if ( e.originalEvent.touches && e.originalEvent.touches.length )
+			{
+				return e.originalEvent.touches[0];
+			}
+			else if ( e.originalEvent.changedTouches && e.originalEvent.changedTouches.length )
+			{
+				return e.originalEvent.changedTouches[0];
+			}
+			return e;
 		};
 
 
