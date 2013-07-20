@@ -36,8 +36,8 @@ ul {
 		position: absolute;
 		bottom: ($dotSize + $margin + $margin) * 8;
 
-		-webkit-transition: 600ms bottom, 400ms box-shadow;
-		transition: 600ms bottom, 400ms box-shadow;
+		-webkit-transition: 250ms bottom, 400ms box-shadow;
+		transition: 250ms bottom, 400ms box-shadow;
 
 		// kick in GPU
 		-webkit-transform: translateZ(0);
