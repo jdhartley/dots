@@ -21,8 +21,9 @@ var DOTS = (function()
 			}
 
 			$('body')
-				.on('mousedown', 'li', function()
+				.on('mousedown', 'li', function(e)
 				{
+					e.preventDefault();
 					flag = true;
 					color = $(this).attr('class').replace('active', '').trim();
 					dots.push( this );
