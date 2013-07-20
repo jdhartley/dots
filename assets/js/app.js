@@ -58,7 +58,6 @@ var DOTS = (function()
 					if ( dots.length > 1 )
 					{
 						// add the new dot above before removing the old dot
-						console.log(dots);
 						$(dots).trigger('append');
 						$(dots).trigger('remove');
 					}
@@ -68,8 +67,9 @@ var DOTS = (function()
 				{
 					$(this).parent().append( newDot() );
 				})
-				.on('remove', 'li', function()
+				.on('remove', 'li', function(e)
 				{
+					e.preventDefault();
 					var self = this;
 					setTimeout( function() {$(self).remove();}, 0 );
 				})
