@@ -24,8 +24,9 @@ var DOTS = (function()
 			$('html, body').on('touchstart touchmove', function(e) { e.preventDefault() });
 
 			$('body')
-				.on('mousedown touchstart', 'li', function()
+				.on('mousedown touchstart', 'li', function(e)
 				{
+					e.preventDefault();
 					flag = true;
 					color = $(this).addClass('active').attr('class').replace('active', '').trim();
 					dots.push( this );
@@ -83,9 +84,9 @@ var DOTS = (function()
 						}
 					}
 
-					// This dot is awesome! Let's make it active
 					if ( ! $(that).hasClass('active') )
 					{
+						// This dot is awesome! Let's make it active
 						$(that).addClass('active');
 						dots.push( that );
 					}
@@ -104,7 +105,7 @@ var DOTS = (function()
 				{
 					var $this = $(this);
 					$(this).parent().append( newDot() );
-					setTimeout(function() { $this.remove(); }, 600);
+					setTimeout(function() { $this.remove(); }, 0);
 				})
 
 		}
