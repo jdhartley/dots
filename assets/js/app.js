@@ -21,10 +21,12 @@ var DOTS = (function()
 			}
 
 			$('body')
-				.on('mousedown', 'li', function()
+				.on('mousedown', 'li', function(e)
 				{
+					e.preventDefault();
 					flag = true;
 					color = $(this).attr('class').replace('active', '').trim();
+					$(this).addClass('active');
 					dots.push( this );
 				})
 				.on('mousemove', 'li', function()
@@ -43,23 +45,33 @@ var DOTS = (function()
 
 					// if ( index )
 
-					// This dot is awesome! Let's make it active
-					$(this).addClass('active');
-					dots.push( this );
+					if ( ! $(this).hasClass('active') )
+					{
+						// This dot is awesome! Let's make it active
+						$(this).addClass('active');
+						dots.push( this );
+					}
 				})
 				.on('mouseup', function()
 				{
 					flag = false;
 					if ( dots.length > 1 )
 					{
+						// add the new dot above before removing the old dot
+						$(dots).trigger('append');
 						$(dots).trigger('remove');
 					}
 					dots = [];
 				})
-				.on('remove', 'li', function()
+				.on('append', 'li', function()
 				{
 					$(this).parent().append( newDot() );
-					$(this).remove();
+				})
+				.on('remove', 'li', function(e)
+				{
+					e.preventDefault();
+					var self = this;
+					setTimeout( function() {$(self).remove();}, 0 );
 				})
 
 		}
