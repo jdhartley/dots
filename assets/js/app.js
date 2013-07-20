@@ -26,6 +26,7 @@ var DOTS = (function()
 					e.preventDefault();
 					flag = true;
 					color = $(this).attr('class').replace('active', '').trim();
+					$(this).addClass('active');
 					dots.push( this );
 				})
 				.on('mousemove', 'li', function()
@@ -44,9 +45,12 @@ var DOTS = (function()
 
 					// if ( index )
 
-					// This dot is awesome! Let's make it active
-					$(this).addClass('active');
-					dots.push( this );
+					if ( ! $(this).hasClass('active') )
+					{
+						// This dot is awesome! Let's make it active
+						$(this).addClass('active');
+						dots.push( this );
+					}
 				})
 				.on('mouseup', function()
 				{
