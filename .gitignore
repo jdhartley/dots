@@ -1,0 +1,9 @@
+# IDE Files
+.buildpath
+.project
+nbproject/*
+*.sublime-*
+
+# OS Files
+.DS_Store
+Thumbs.db

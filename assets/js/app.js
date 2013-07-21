@@ -1,5 +1,7 @@
 var DOTS = (function()
 {
+	'use strict';
+
 	var colors = ['g','p','r','b','y'],
 		flag = false,
 		color,
@@ -103,11 +105,11 @@ var DOTS = (function()
 					setTimeout(function() { $this.remove(); }, 0);
 				})
 
-		}
+		},
 		newDot = function()
 		{
 			return $('<li/>').addClass( colors[ Math.floor(Math.random() * 5) ] ).attr('id', 'd' + ++count);
-		}
+		},
 		_fixTouchEvent = function(e)
 		{
 			if ( e.originalEvent.touches && e.originalEvent.touches.length )
