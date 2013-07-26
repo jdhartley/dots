@@ -54,12 +54,14 @@ var DOTS = (function()
 						return;
 
 					var $lis = $('li'),
-						index = $lis.index( $(that) );
+						index = $lis.index( $(that) ),
+						$last = false,
+						lastIndex = -1;
 
 					if ( dots.length > 0 )
 					{
-						var $last = $( dots[ dots.length - 1 ] ),
-							lastIndex = $lis.index( $last );
+						$last = $( dots[ dots.length - 1 ] );
+						lastIndex = $lis.index( $last );
 
 						// Test if this is an adjacent dot
 						if ( ! (
@@ -82,15 +84,25 @@ var DOTS = (function()
 						{
 							$last.removeClass('active');
 							dots.pop();
+
+							if ( $('body').hasClass('inSquare') && ! _activeDotsInSquare() )
+							{
+								$('body').removeClass('inSquare');
+							}
 							return;
 						}
 					}
 
-					if ( ! $(that).hasClass('active') )
+					if ( ! $(that).hasClass('active') || index !== lastIndex )
 					{
 						// This dot is awesome! Let's make it active
 						$(that).addClass('active');
 						dots.push( that );
+
+						if ( _activeDotsInSquare() )
+						{
+							$('body').addClass('inSquare');
+						}
 					}
 				})
 				.on('mouseup touchend', function()
@@ -98,10 +110,11 @@ var DOTS = (function()
 					flag = false;
 					if ( dots.length > 1 )
 					{
-						$(dots).trigger('dotRemove');
+						$( _activeDotsInSquare() ? $('.' + color) : dots).trigger('dotRemove');
 					}
 					dots = [];
 					$('li.active').removeClass('active');
+					$('body').removeClass('inSquare');
 				})
 				.on('dotRemove', 'li', function()
 				{
@@ -126,6 +139,21 @@ var DOTS = (function()
 				return e.originalEvent.changedTouches[0];
 			}
 			return e;
+		},
+		_activeDotsInSquare = function()
+		{
+			var ids = $(dots).map(function() { return this.id }),
+				itemsChecked = {};
+
+			for ( var i = 0; i < ids.length; i++ )
+			{
+				if ( Object.prototype.hasOwnProperty.call(itemsChecked, ids[i]) )
+				{
+					return true;
+				}
+				itemsChecked[ ids[i] ] = true;
+			}
+			return false;
 		};
 
 
