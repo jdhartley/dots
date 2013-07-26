@@ -56,7 +56,7 @@ var DOTS = (function()
 					var $lis = $('li'),
 						index = $lis.index( $(that) );
 
-					if ( dots.length > 1 )
+					if ( dots.length > 0 )
 					{
 						var $last = $( dots[ dots.length - 1 ] ),
 							lastIndex = $lis.index( $last );
