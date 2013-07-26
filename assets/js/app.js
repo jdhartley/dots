@@ -10,6 +10,11 @@ var DOTS = (function()
 
 		_init = function()
 		{
+			$(window).resize(function()
+			{
+				$('html, body').css('font-size', Math.min( $('html').width(), $('html').height() ) / 30);
+			}).trigger('resize')[0].scrollTo(0,0);
+
 			// Make a 6x6 grid of dots!
 			for ( var u = 0; u < 6; u++ )
 			{
