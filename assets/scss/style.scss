@@ -28,35 +28,45 @@ ul {
 
 	li {
 		display: block;
-		margin: ($margin * 2) $margin;
+		// box-sizing: border-box;
 		padding: 0;
-		width: $dotSize;
-		height: $dotSize;
-		border-radius: 50%;
+		width: $dotSize;// + ( $margin * 2 );
+		height: $dotSize;// + ( $margin * 2 );
+		padding: $margin;
 		position: absolute;
 		bottom: ($dotSize + $margin + $margin) * 8;
 
-		-webkit-transition: 250ms bottom, 400ms box-shadow;
-		transition: 250ms bottom, 400ms box-shadow;
+		@for $i from 1 through 12 {
+			&:nth-child(#{$i}) {
+				bottom: ($dotSize + $margin + $margin) * ( $i - 1 );
+			}
+		}
+
+		-webkit-transition: 250ms bottom;
+		transition: 250ms bottom;
 
 		// kick in GPU
 		-webkit-transform: translateZ(0);
 		transform: translateZ(0);
 
-
-		@for $i from 1 through 12 {
-			&:nth-child(#{$i}) {
-				bottom: ($dotSize + $margin + $margin) * ( $i - 1 ) - $margin;
-			}
-		}
-
+		// setup "currentColor"
 		@for $i from 1 through 5 {
 			&.#{nth($classes, $i)} {
 				color: nth($colors, $i);
 			}
 		}
 
-		background: currentColor;
-		&.active { box-shadow: 0 0 0 ($margin / 5) #fff, 0 0 ($margin * 1.5) ($margin / 5) currentColor; }
+		&:after {
+			display: block;
+			content: '';
+			width: $dotSize;
+			height: $dotSize;
+			border-radius: 50%;
+			-webkit-transition: 400ms box-shadow;
+			transition: 400ms box-shadow;
+			background: currentColor;
+		}
+
+		&.active:after { box-shadow: 0 0 0 ($margin / 5) #fff, 0 0 ($margin * 1.5) ($margin / 5) currentColor; }
 	}
 }
