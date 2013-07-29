@@ -7,6 +7,7 @@ var DOTS = (function()
 		color,
 		dots = [],
 		count = 0,
+		currentNote = 0,
 
 		_init = function()
 		{
@@ -39,6 +40,8 @@ var DOTS = (function()
 					flag = true;
 					color = $(that).addClass('active').attr('class').replace('active', '').trim();
 					dots.push( that );
+					currentNote++;
+					_playCurrentNote();
 				})
 				.on('mousemove touchmove', 'li', function(e)
 				{
@@ -85,6 +88,9 @@ var DOTS = (function()
 							$last.removeClass('active');
 							dots.pop();
 
+							currentNote--;
+							_playCurrentNote();
+
 							if ( $('body').hasClass('inSquare') && ! _activeDotsInSquare() )
 							{
 								$('body').removeClass('inSquare');
@@ -98,10 +104,16 @@ var DOTS = (function()
 						// This dot is awesome! Let's make it active
 						$(that).addClass('active');
 						dots.push( that );
+						currentNote++;
 
 						if ( _activeDotsInSquare() )
 						{
 							$('body').addClass('inSquare');
+							_playCurrentNote(true);
+						}
+						else
+						{
+							_playCurrentNote();
 						}
 					}
 				})
@@ -115,6 +127,7 @@ var DOTS = (function()
 					dots = [];
 					$('li.active').removeClass('active');
 					$('body').removeClass('inSquare');
+					currentNote = 0;
 				})
 				.on('dotRemove', 'li', function()
 				{
@@ -154,6 +167,13 @@ var DOTS = (function()
 				itemsChecked[ ids[i] ] = true;
 			}
 			return false;
+		},
+		_playCurrentNote = function(inSquare)
+		{
+			var s = new Synthesizer(),
+				thisNote = 60 + currentNote;
+			s.on( thisNote );
+			setTimeout(function() { s.off(thisNote); }, 500);
 		};
 
 
