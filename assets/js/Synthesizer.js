@@ -9,15 +9,11 @@
 			filter = context.createBiquadFilter(),
 			channels = [],
 			type = 'sawtooth',
-			adsr = function(context, pa, pd, ps, pr)
+			adsr = function(context, a, d, s, r)
 			{
 				var osc = context.createOscillator(),
 					g1 = context.createGainNode(),
-					g2 = context.createGainNode(),
-					a = pa,
-					d = pd,
-					s = ps,
-					r = pr;
+					g2 = context.createGainNode();
 
 				osc.connect(g1);
 				g1.connect(g2);
@@ -48,15 +44,15 @@
 				this.start = function(when)
 				{
 					g1.gain.setValueAtTime(0,when);
-					g1.gain.linearRampToValueAtTime(1,when+a);
-					g1.gain.linearRampToValueAtTime(s,when+a+d);
+					g1.gain.linearRampToValueAtTime(1, when + a);
+					g1.gain.linearRampToValueAtTime(s, when + a + d);
 					osc.start(when);
 				};
 				this.stop = function(when)
 				{
 					g2.gain.setValueAtTime(1,when);
-					g2.gain.linearRampToValueAtTime(0,when+r);
-					osc.stop(when+r);
+					g2.gain.linearRampToValueAtTime(0, when + r);
+					osc.stop(when + r);
 				};
 				this.connect = function(val)
 				{

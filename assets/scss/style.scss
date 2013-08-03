@@ -11,10 +11,14 @@ $classes: 'g', 'p', 'r', 'b', 'y';
 $colors: $g, $p, $r, $b, $y;
 
 html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-body { background: #fff; }
-body.inSquare li { -webkit-animation: 450ms ease-in-out flash; animation: 450ms ease-in-out flash; }
-@-webkit-keyframes "flash" { 50% { opacity: .6; } }
-@keyframes "flash" { 50% { opacity: .6; } }
+body { background: #fff; -webkit-transition: 250ms all; transition: 250ms all; }
+body.inSquare {
+	&.g { background: #b5efbd; box-shadow: inset 0 0 0 ($margin / 2) $g; }
+	&.p { background: #deaee7; box-shadow: inset 0 0 0 ($margin / 2) $p; }
+	&.r { background: #f7a69c; box-shadow: inset 0 0 0 ($margin / 2) $r; }
+	&.b { background: #bddfff; box-shadow: inset 0 0 0 ($margin / 2) $b; }
+	&.y { background: #f7eb8c; box-shadow: inset 0 0 0 ($margin / 2) $y; }
+}
 ul {
 	margin: 0;
 	padding: 30px 0;
