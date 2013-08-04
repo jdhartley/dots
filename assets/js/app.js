@@ -32,8 +32,15 @@ var DOTS = (function()
 			$('html, body').on('touchstart touchmove', function(e) { e.preventDefault() });
 
 			$('body')
+				.on('dblclick', 'li', function(e)
+				{
+					$(this).trigger('dotRemove');
+				})
 				.on('mousedown touchstart', 'li', function(e)
 				{
+					if ( flag === true ) // prevent multitap
+						return;
+
 					e.preventDefault();
 					e = _fixTouchEvent(e);
 					var that = document.elementFromPoint(e.pageX, e.pageY);
@@ -143,11 +150,15 @@ var DOTS = (function()
 		},
 		_fixTouchEvent = function(e)
 		{
+			if ( ! e.originalEvent )
+			{
+				return e;
+			}
 			if ( e.originalEvent.touches && e.originalEvent.touches.length )
 			{
 				return e.originalEvent.touches[0];
 			}
-			else if ( e.originalEvent.changedTouches && e.originalEvent.changedTouches.length )
+			if ( e.originalEvent.changedTouches && e.originalEvent.changedTouches.length )
 			{
 				return e.originalEvent.changedTouches[0];
 			}
@@ -171,7 +182,15 @@ var DOTS = (function()
 		_playcurrentNoteIndex = function(inSquare)
 		{
 			var s = new Synthesizer(),
-				thisNote = [44, 47, 50, 53][currentNoteIndex - 1];
+				getNoteForIndex = function(n)
+				{
+					// loop through steps and add to base note
+					for ( var note = 56, n = n - 1; n > 0; n-- )
+						note += ([3,2,2,3,2][ n % 5 ]);
+					return note;
+				},
+				thisNote = getNoteForIndex(currentNoteIndex);
+
 			s.on( thisNote );
 			setTimeout(function() { s.off(thisNote); }, 500);
 		};

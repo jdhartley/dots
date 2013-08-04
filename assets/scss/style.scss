@@ -35,10 +35,9 @@ ul {
 
 	li {
 		display: block;
-		// box-sizing: border-box;
 		padding: 0;
-		width: $dotSize;// + ( $margin * 2 );
-		height: $dotSize;// + ( $margin * 2 );
+		width: $dotSize;
+		height: $dotSize;
 		padding: $margin;
 		position: absolute;
 		bottom: ($dotSize + $margin + $margin) * 8;
