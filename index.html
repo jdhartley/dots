@@ -4,11 +4,21 @@
 	<title>Dots</title>
 	<link rel="stylesheet" href="./assets/css/style.css" />
 	<script src="./assets/js/jquery-2.0.3.min.js"></script>
-	<script src="./assets/js/app-ck.js"></script>
-	<script src="./assets/js/Synthesizer.js"></script>
+	<script src="./assets/js/app.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
-<body></body>
+<body>
+	<header><ul>
+		<li id="gameKeeper" data-value="0"></li>
+		<li id="score" data-value="0">Score</li>
+	</ul></header>
+	<section id="board"></section>
+	<footer><ul>
+		<li data-value="infinite" class="active">Infinite</li>
+		<li data-value="moves">30 Moves</li>
+		<li data-value="time">60 Seconds</li>
+	</ul></footer>
+</body>
 </html>

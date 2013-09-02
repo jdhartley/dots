@@ -11,68 +11,125 @@ $classes: 'g', 'p', 'r', 'b', 'y';
 $colors: $g, $p, $r, $b, $y;
 
 html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-body { background: #fff; -webkit-transition: 250ms all; transition: 250ms all; }
-body.inSquare {
-	&.g { background: #b5efbd; box-shadow: inset 0 0 0 ($margin / 2) $g; }
-	&.p { background: #deaee7; box-shadow: inset 0 0 0 ($margin / 2) $p; }
-	&.r { background: #f7a69c; box-shadow: inset 0 0 0 ($margin / 2) $r; }
-	&.b { background: #bddfff; box-shadow: inset 0 0 0 ($margin / 2) $b; }
-	&.y { background: #f7eb8c; box-shadow: inset 0 0 0 ($margin / 2) $y; }
-}
-ul {
-	margin: 0;
-	padding: 30px 0;
-	list-style: none;
-	position: absolute;
-	top: 0; bottom: 0;
-	width: $dotSize + ( $margin * 2 );
 
-	@for $i from 1 through 6 {
-		&:nth-child(#{$i}) {
-			left: ( $dotSize + ( $margin * 2 ) ) * ( $i - 1 );
+header, footer {
+	position: absolute;
+	left: 0;
+	right: 0;
+	background: #f4f4f4;
+	height: 40px;
+
+	ul {
+		display: table;
+		table-layout: fixed;
+		margin: 0;
+		padding: 0;
+		font: 16px/40px sans-serif;
+		text-align: center;
+
+		li {
+			display: table-cell;
+			width: 1%;
+			color: #aaa;
 		}
 	}
+}
 
-	li {
-		display: block;
-		padding: 0;
-		width: $dotSize;
-		height: $dotSize;
-		padding: $margin;
+header {
+	top: 0;
+	box-shadow: inset 0 -1px #ccc;
+
+	li:after {
+		display: inline-block;
+		content: attr(data-value);
+		color: #888;
+		margin: 0 0 0 5px;
+	}
+}
+footer {
+	bottom: 0;
+	box-shadow: inset 0 1px #ccc;
+
+	li.active {
+		background: $b;
+		color: #fff;
+	}
+}
+
+#board {
+	background: #fff;
+	-webkit-transition: 250ms all;
+	transition: 250ms all;
+
+	position: absolute;
+	top: 50%; left: 50%;
+	margin: -15em 0 0 -15em;
+
+	width: 30em;
+	height: 30em;
+
+	&.inSquare {
+		&.g { background: #b5efbd; box-shadow: inset 0 0 0 ($margin / 2) $g; }
+		&.p { background: #deaee7; box-shadow: inset 0 0 0 ($margin / 2) $p; }
+		&.r { background: #f7a69c; box-shadow: inset 0 0 0 ($margin / 2) $r; }
+		&.b { background: #bddfff; box-shadow: inset 0 0 0 ($margin / 2) $b; }
+		&.y { background: #f7eb8c; box-shadow: inset 0 0 0 ($margin / 2) $y; }
+	}
+	ul {
+		margin: 0;
+		padding: 30px 0;
+		list-style: none;
 		position: absolute;
-		bottom: ($dotSize + $margin + $margin) * 8;
+		top: 0; bottom: 0;
+		width: $dotSize + ( $margin * 2 );
 
-		@for $i from 1 through 12 {
+		@for $i from 1 through 6 {
 			&:nth-child(#{$i}) {
-				bottom: ($dotSize + $margin + $margin) * ( $i - 1 );
+				left: ( $dotSize + ( $margin * 2 ) ) * ( $i - 1 );
 			}
 		}
 
-		-webkit-transition: 250ms bottom;
-		transition: 250ms bottom;
-
-		// kick in GPU
-		-webkit-transform: translateZ(0);
-		transform: translateZ(0);
-
-		// setup "currentColor"
-		@for $i from 1 through 5 {
-			&.#{nth($classes, $i)} {
-				color: nth($colors, $i);
-			}
-		}
-
-		&:after {
+		li {
 			display: block;
-			content: '';
+			padding: 0;
 			width: $dotSize;
 			height: $dotSize;
-			border-radius: 50%;
-			-webkit-transition: 400ms box-shadow;
-			transition: 400ms box-shadow;
-			background: currentColor;
-		}
+			padding: $margin;
+			position: absolute;
+			bottom: ($dotSize + $margin + $margin) * 8;
 
-		&.active:after { box-shadow: 0 0 0 ($margin / 5) #fff, 0 0 ($margin * 1.5) ($margin / 5) currentColor; }
+			@for $i from 1 through 12 {
+				&:nth-child(#{$i}) {
+					bottom: ($dotSize + $margin + $margin) * ( $i - 1 );
+				}
+			}
+
+			-webkit-transition: 250ms bottom;
+			transition: 250ms bottom;
+
+			// kick in GPU
+			-webkit-transform: translateZ(0);
+			transform: translateZ(0);
+
+			// setup "currentColor"
+			@for $i from 1 through 5 {
+				&.#{nth($classes, $i)} {
+					color: nth($colors, $i);
+				}
+			}
+
+			&:after {
+				display: block;
+				content: '';
+				width: $dotSize;
+				height: $dotSize;
+				border-radius: 50%;
+				-webkit-transition: 400ms box-shadow;
+				transition: 400ms box-shadow;
+				background: currentColor;
+			}
+
+			&.active:after { box-shadow: 0 0 0 ($margin / 5) #fff, 0 0 ($margin * 1.5) ($margin / 5) currentColor; }
+		}
 	}
 }

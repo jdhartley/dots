@@ -9,17 +9,44 @@ var DOTS = (function()
 		count = 0,
 		currentNoteIndex = 0,
 
+		$board,
+		$gameKeeper,
+
+		gameMode = 'infinite', // infinite, moves, timed
+		timedLoop,
+
 		_init = function()
 		{
-			$(window).resize(function()
+			$board = $('#board').empty();
+
+			$gameKeeper = $('#gameKeeper').html(function()
+				{
+					return gameMode === 'timed' ? 'Time' : 'Moves';
+				}).attr('data-value', function()
+				{
+					if ( gameMode === 'infinite' )
+					{
+						return '0';
+					}
+					else if ( gameMode === 'moves' )
+					{
+						return '30';
+					}
+					else if ( gameMode === 'timed' )
+					{
+						return '60';
+					}
+				});
+
+			$(window).off('resize.dots').on('resize.dots', function()
 			{
-				$('html, body').css('font-size', Math.min( $('html').width(), $('html').height() ) / 30);
+				$board.css('font-size', Math.min( $('html').width(), $('html').height() - $('header').outerHeight() - $('footer').outerHeight() ) / 30);
 			}).trigger('resize')[0].scrollTo(0,0);
 
 			// Make a 6x6 grid of dots!
 			for ( var u = 0; u < 6; u++ )
 			{
-				$('body').append(
+				$board.append(
 					$('<ul/>')
 						.each(function()
 						{
@@ -29,14 +56,14 @@ var DOTS = (function()
 				);
 			}
 
-			$('html, body').on('touchstart touchmove', function(e) { e.preventDefault() });
-
-			$('body')
-				.on('dblclick', 'li', function(e)
+			$board
+				.off('.dots')
+				.on('touchstart.dots touchmove.dots', function(e) { e.preventDefault() })
+				.on('dblclick.dots', 'li', function(e)
 				{
 					$(this).trigger('dotRemove');
 				})
-				.on('mousedown touchstart', 'li', function(e)
+				.on('mousedown.dots touchstart.dots', 'li', function(e)
 				{
 					if ( flag === true ) // prevent multitap
 						return;
@@ -50,7 +77,7 @@ var DOTS = (function()
 					currentNoteIndex++;
 					_playcurrentNoteIndex();
 				})
-				.on('mousemove touchmove', 'li', function(e)
+				.on('mousemove.dots touchmove.dots', 'li', function(e)
 				{
 					e = _fixTouchEvent(e);
 					var that = document.elementFromPoint(e.pageX, e.pageY);
@@ -63,7 +90,7 @@ var DOTS = (function()
 					if ( color !== $(that).attr('class').replace('active', '').trim() )
 						return;
 
-					var $lis = $('li'),
+					var $lis = $('li', $board),
 						index = $lis.index( $(that) ),
 						$last = false,
 						lastIndex = -1;
@@ -98,9 +125,9 @@ var DOTS = (function()
 							currentNoteIndex--;
 							_playcurrentNoteIndex();
 
-							if ( $('body').hasClass('inSquare') && ! _activeDotsInSquare() )
+							if ( $board.hasClass('inSquare') && ! _activeDotsInSquare() )
 							{
-								$('body').removeClass();
+								$board.removeClass();
 							}
 							return;
 						}
@@ -115,7 +142,7 @@ var DOTS = (function()
 
 						if ( _activeDotsInSquare() )
 						{
-							$('body').addClass('inSquare ' + color);
+							$board.addClass('inSquare ' + color);
 							_playcurrentNoteIndex(true);
 						}
 						else
@@ -124,25 +151,33 @@ var DOTS = (function()
 						}
 					}
 				})
-				.on('mouseup touchend', function()
+				.on('mouseup.dots touchend.dots', function()
 				{
 					flag = false;
 					if ( dots.length > 1 )
 					{
 						$( _activeDotsInSquare() ? $('.' + color) : dots).trigger('dotRemove');
+						_updateGameKeeper();
 					}
 					dots = [];
-					$('li.active').removeClass('active');
-					$('body').removeClass('inSquare');
+					$('li.active', $board).removeClass('active');
+					$board.removeClass('inSquare');
 					currentNoteIndex = 0;
 				})
-				.on('dotRemove', 'li', function()
+				.on('dotRemove.dots', 'li', function()
 				{
 					var $this = $(this);
 					$(this).parent().append( newDot() );
 					setTimeout(function() { $this.remove(); }, 0);
-				})
+					_addPoint();
+				});
 
+			$('footer').off('click.dots').on('click.dots', 'li:not(.active)', function()
+			{
+				$(this).addClass('active').siblings().removeClass('active');
+				gameMode = $(this).attr('data-value');
+				_init();
+			});
 		},
 		newDot = function()
 		{
@@ -181,18 +216,26 @@ var DOTS = (function()
 		},
 		_playcurrentNoteIndex = function(inSquare)
 		{
-			var s = new Synthesizer(),
-				getNoteForIndex = function(n)
-				{
-					// loop through steps and add to base note
-					for ( var note = 56, n = n - 1; n > 0; n-- )
-						note += ([3,2,2,3,2][ n % 5 ]);
-					return note;
-				},
-				thisNote = getNoteForIndex(currentNoteIndex);
-
-			s.on( thisNote );
-			setTimeout(function() { s.off(thisNote); }, 500);
+			// TO DO: sounds based on note
+		},
+		_addPoint = function()
+		{
+			$('#score').attr('data-value', function(index, value) { return parseInt(value) + 1; });
+		},
+		_updateGameKeeper = function()
+		{
+			if ( gameMode === 'infinite' )
+			{
+				$gameKeeper.attr('data-value', function(index, value) { return parseInt(value) + 1; });
+			}
+			else if ( gameMode === 'moves' )
+			{
+				$gameKeeper.attr('data-value', function(index, value) { return parseInt(value) - 1; });
+			}
+			else if ( gameMode === 'timed' )
+			{
+				// handled in timedLoop
+			}
 		};
 
 
