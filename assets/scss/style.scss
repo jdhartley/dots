@@ -39,6 +39,10 @@ header {
 	top: 0;
 	box-shadow: inset 0 -1px #ccc;
 
+	li {
+		cursor: default;
+	}
+
 	li:after {
 		display: inline-block;
 		content: attr(data-value);
@@ -49,6 +53,10 @@ header {
 footer {
 	bottom: 0;
 	box-shadow: inset 0 1px #ccc;
+
+	li {
+		cursor: pointer;
+	}
 
 	li.active {
 		background: $b;

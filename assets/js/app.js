@@ -11,6 +11,7 @@ var DOTS = (function()
 
 		$board,
 		$gameKeeper,
+		$score,
 
 		gameMode = 'infinite', // infinite, moves, timed
 		timedLoop,
@@ -19,10 +20,23 @@ var DOTS = (function()
 		{
 			$board = $('#board').empty();
 
-			$gameKeeper = $('#gameKeeper').html(function()
+			$gameKeeper = $('#gameKeeper')
+				.html(function()
 				{
-					return gameMode === 'timed' ? 'Time' : 'Moves';
-				}).attr('data-value', function()
+					if ( gameMode === 'infinite' )
+					{
+						return 'Moves';
+					}
+					else if ( gameMode === 'moves' )
+					{
+						return 'Moves Left';
+					}
+					else if ( gameMode === 'timed' )
+					{
+						return 'Time';
+					}
+				})
+				.attr('data-value', function()
 				{
 					if ( gameMode === 'infinite' )
 					{
@@ -37,6 +51,8 @@ var DOTS = (function()
 						return '60';
 					}
 				});
+
+			$score = $('#score').attr('data-value', 0);
 
 			$(window).off('resize.dots').on('resize.dots', function()
 			{
@@ -172,7 +188,7 @@ var DOTS = (function()
 					_addPoint();
 				});
 
-			$('footer').off('click.dots').on('click.dots', 'li:not(.active)', function()
+			$('footer').off('click.dots').on('click.dots', 'li', function()
 			{
 				$(this).addClass('active').siblings().removeClass('active');
 				gameMode = $(this).attr('data-value');
@@ -220,7 +236,7 @@ var DOTS = (function()
 		},
 		_addPoint = function()
 		{
-			$('#score').attr('data-value', function(index, value) { return parseInt(value) + 1; });
+			$score.attr('data-value', function(index, value) { return parseInt(value) + 1; });
 		},
 		_updateGameKeeper = function()
 		{
