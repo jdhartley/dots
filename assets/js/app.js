@@ -14,6 +14,7 @@ var DOTS = (function()
 		$score,
 
 		gameMode = 'infinite', // infinite, moves, timed
+		timeLeft,
 		timedLoop,
 
 		_init = function()
@@ -56,7 +57,13 @@ var DOTS = (function()
 
 			$(window).off('resize.dots').on('resize.dots', function()
 			{
-				$board.css('font-size', Math.min( $('html').width(), $('html').height() - $('header').outerHeight() - $('footer').outerHeight() ) / 30);
+				$board.css(
+					'font-size',
+					Math.min(
+						$('html').width(),
+						$('html').height() - $('header').outerHeight() - $('footer').outerHeight()
+					) / 30
+				);
 			}).trigger('resize')[0].scrollTo(0,0);
 
 			// Make a 6x6 grid of dots!
@@ -194,6 +201,21 @@ var DOTS = (function()
 				gameMode = $(this).attr('data-value');
 				_init();
 			});
+
+			if ( gameMode === 'timed' )
+			{
+				timeLeft = 60;
+				timedLoop = setInterval(function()
+				{
+					if ( --timeLeft <= 0 )
+					{
+						clearInterval(timedLoop);
+						$board.off('.dots');
+					}
+
+					$gameKeeper.attr('data-value', timeLeft);
+				}, 1000);
+			}
 		},
 		newDot = function()
 		{
