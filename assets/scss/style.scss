@@ -112,8 +112,11 @@ footer {
 				}
 			}
 
-			-webkit-transition: 250ms bottom;
-			transition: 250ms bottom;
+			-webkit-transition: bottom 250ms cubic-bezier(0.350, 1, 0.400, 0.665); // older webkit
+			-webkit-transition: bottom 250ms cubic-bezier(0.350, 1.650, 0.400, 0.665);
+			   -moz-transition: bottom 250ms cubic-bezier(0.350, 1.650, 0.400, 0.665);
+			     -o-transition: bottom 250ms cubic-bezier(0.350, 1.650, 0.400, 0.665);
+			        transition: bottom 250ms cubic-bezier(0.350, 1.650, 0.400, 0.665);
 
 			// kick in GPU
 			-webkit-transform: translateZ(0);
