@@ -10,15 +10,25 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
 <body>
-	<header><ul>
-		<li id="gameKeeper" data-value="0"></li>
-		<li id="score" data-value="0">Score</li>
-	</ul></header>
-	<section id="board"></section>
-	<footer><ul>
-		<li data-value="infinite" class="active">Infinite</li>
-		<li data-value="moves">30 Moves</li>
-		<li data-value="timed">60 Seconds</li>
-	</ul></footer>
+	<section id="menu">
+		<div id="info"><div id="mode-title">Timed</div><div id="mode-description">60 Seconds</div></div>
+		<nav>
+			<button type="button" class="active" data-mode="timed" data-title="Timed" data-description="60 Seconds"></button>
+			<button type="button" data-mode="moves" data-title="Moves" data-description="30 Moves"></button>
+			<button type="button" data-mode="infinite" data-title="Endless" data-description="No Limits"></button>
+		</nav>
+		<button type="button" id="start">Play</button>
+	</section>
+
+	<section id="game">
+		<header><ul>
+			<li id="gameKeeper" data-value="0"></li>
+			<li id="score" data-value="0">Score</li>
+		</ul></header>
+
+		<section id="board"></section>
+
+		<footer><ul></ul></footer>
+	</section>
 </body>
 </html>

@@ -11,12 +11,30 @@ var DOTS = (function() {
 		$board,
 		$gameKeeper,
 		$score,
+		$menu,
+		$game,
 
 		gameMode = 'infinite', // infinite, moves, timed
 		timeLeft,
 		timedLoop,
 
 		_init = function() {
+			$game = $('#game');
+
+			$menu = $('#menu')
+				.on('click.dots', 'button', function() {
+					$(this).addClass('active').siblings('.active').removeClass('active');
+					$('#mode-title').html( $(this).attr('data-title') );
+					$('#mode-description').html( $(this).attr('data-description') );
+				})
+				.on('click.dots', '#start', function() {
+					gameMode = $('#menu nav .active').attr('data-mode');
+					_gameStart();
+				});
+		},
+		_gameStart = function() {
+			$menu.hide();
+			$game.show();
 			$board = $('#board').empty();
 
 			$gameKeeper = $('#gameKeeper')
@@ -54,7 +72,7 @@ var DOTS = (function() {
 			// Make a 6x6 grid of dots!
 			var fillRow = function() {
 				for ( var d = 0; d < 6; d++ ) {
-					$(this).append( newDot() );
+					$(this).append( _newDot() );
 				}
 			};
 			for ( var u = 0; u < 6; u++ ) {
@@ -157,16 +175,10 @@ var DOTS = (function() {
 				})
 				.on('dotRemove.dots', 'li', function() {
 					var $this = $(this);
-					$(this).parent().append( newDot() );
+					$(this).parent().append( _newDot() );
 					setTimeout(function() { $this.remove(); }, 0);
 					_addPoint();
 				});
-
-			$('footer').off('click.dots').on('click.dots', 'li', function() {
-				$(this).addClass('active').siblings().removeClass('active');
-				gameMode = $(this).attr('data-value');
-				_init();
-			});
 
 			if ( 'timed' === gameMode ) {
 				timeLeft = 60;
@@ -180,7 +192,7 @@ var DOTS = (function() {
 				}, 1000);
 			}
 		},
-		newDot = function() {
+		_newDot = function() {
 			return $('<li/>').addClass( colors[ Math.floor(Math.random() * 5) ] ).attr('id', 'd' + (++count));
 		},
 		_fixTouchEvent = function(e) {
@@ -223,7 +235,6 @@ var DOTS = (function() {
 				// handled in timedLoop
 			}
 		};
-
 
 	return {
 		init: _init
