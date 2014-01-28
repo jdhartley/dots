@@ -4,6 +4,7 @@ var DOTS = (function() {
 	var colors = ['g','p','r','b','y'],
 		flag = false,
 		color,
+		colorLock,
 		dots = [],
 		count = 0,
 		currentNoteIndex = 0,
@@ -156,6 +157,7 @@ var DOTS = (function() {
 
 						if ( _activeDotsInSquare() ) {
 							$board.addClass('inSquare ' + color);
+							colorLock = color;
 							_playCurrentNoteIndex(true);
 						} else {
 							_playCurrentNoteIndex();
@@ -171,6 +173,7 @@ var DOTS = (function() {
 					dots = [];
 					$('li.active', $board).removeClass('active');
 					$board.removeClass('inSquare');
+					colorLock = null;
 					currentNoteIndex = 0;
 				})
 				.on('dotRemove.dots', 'li', function() {
@@ -193,7 +196,9 @@ var DOTS = (function() {
 			}
 		},
 		_newDot = function() {
-			return $('<li/>').addClass( colors[ Math.floor(Math.random() * 5) ] ).attr('id', 'd' + (++count));
+			return $('<li/>').addClass( (function colorChooser(newColor) {
+				return (newColor = colors[ Math.floor(Math.random() * 5) ]) === colorLock ? colorChooser() : newColor;
+			})() ).attr('id', 'd' + (++count));
 		},
 		_fixTouchEvent = function(e) {
 			if ( ! e.originalEvent ) {
