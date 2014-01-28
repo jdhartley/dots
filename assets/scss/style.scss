@@ -129,14 +129,15 @@ footer {
 
 #game {
 	display: none;
+	background: #fff;
 }
 
 #board {
-	background: #fff;
 	-webkit-transition: 250ms;
 	transition: 250ms;
 
 	position: absolute;
+	z-index: 2;
 	top: 50%; left: 50%;
 	margin: -15em 0 0 -15em;
 
@@ -208,6 +209,68 @@ footer {
 			}
 
 			&.active::after { box-shadow: 0 0 0 ($margin / 5) #fff, 0 0 ($margin * 1.5) ($margin / 5) currentColor; }
+		}
+	}
+}
+
+#connectors {
+	-webkit-transition: 250ms;
+	transition: 250ms;
+
+	position: absolute;
+	z-index: 1;
+	top: 50%; left: 50%;
+	margin: -12.5em 0 0 -12.5em;
+
+	width: 30em;
+	height: 30em;
+	// setup "currentColor"
+	@for $i from 1 through 5 {
+		&.#{nth($classes, $i)} li {
+			border-color: nth($colors, $i);
+		}
+	}
+
+	ul {
+		margin: 0;
+		padding: 30px 0;
+		list-style: none;
+		position: absolute;
+		top: 0; bottom: 0;
+		width: $dotSize + ( $margin * 2 );
+
+
+		@for $i from 1 through 6 {
+			&:nth-child(#{$i}) {
+				left: -0.5em + ( $dotSize + ( $margin * 2 ) ) * ( $i - 1 );
+			}
+		}
+
+		li {
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			display: block;
+			padding: 0;
+			width: $dotSize + $margin + $margin;
+			height: $dotSize + $margin + $margin;
+			padding: $margin;
+			position: absolute;
+			bottom: ($dotSize + $margin + $margin) * 8;
+			border-top: 0 solid transparent;
+			border-left: 0 solid transparent;
+
+			@for $i from 1 through 12 {
+				&:nth-child(#{$i}) {
+					bottom: 0.5em + ($dotSize + $margin + $margin) * ( $i - 1 );
+				}
+			}
+
+			&.top {
+				border-top-width: 1em;
+			}
+			&.left {
+				border-left-width: 1em;
+			}
 		}
 	}
 }

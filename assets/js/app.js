@@ -9,11 +9,12 @@ var DOTS = (function() {
 		count = 0,
 		currentNoteIndex = 0,
 
-		$board,
-		$gameKeeper,
-		$score,
 		$menu,
 		$game,
+		$board,
+		$connectors,
+		$gameKeeper,
+		$score,
 
 		gameMode = 'infinite', // infinite, moves, timed
 		timeLeft,
@@ -37,6 +38,7 @@ var DOTS = (function() {
 			$menu.hide();
 			$game.show();
 			$board = $('#board').empty();
+			$connectors = $('#connectors');
 
 			$gameKeeper = $('#gameKeeper')
 				.html(function() {
@@ -61,7 +63,7 @@ var DOTS = (function() {
 			$score = $('#score').attr('data-value', 0);
 
 			$(window).off('resize.dots').on('resize.dots', function() {
-				$board.css(
+				$game.css(
 					'font-size',
 					Math.min(
 						$('html').width(),
@@ -93,16 +95,17 @@ var DOTS = (function() {
 
 					e.preventDefault();
 					e = _fixTouchEvent(e);
-					var that = document.elementFromPoint(e.pageX, e.pageY);
+					var _this = document.elementFromPoint(e.pageX, e.pageY);
 					flag = true;
-					color = $(that).addClass('active').attr('class').replace('active', '').trim();
-					dots.push( that );
+					color = $(_this).addClass('active').attr('class').replace('active', '').trim();
+					$connectors.addClass(color);
+					dots.push( _this );
 					currentNoteIndex++;
 					_playCurrentNoteIndex();
 				})
 				.on('mousemove.dots touchmove.dots', 'li', function(e) {
 					e = _fixTouchEvent(e);
-					var that = document.elementFromPoint(e.pageX, e.pageY);
+					var _this = document.elementFromPoint(e.pageX, e.pageY);
 
 					// Are we even touching?
 					if ( ! flag ) {
@@ -110,19 +113,29 @@ var DOTS = (function() {
 					}
 
 					// Is this dot the right color?
-					if ( color !== $(that).attr('class').replace('active', '').trim() ) {
+					if ( color !== $(_this).attr('class').replace('active', '').trim() ) {
 						return;
 					}
 
 					var $lis = $('li', $board),
-						index = $lis.index( $(that) ),
-						$last = false,
-						lastIndex = -1;
+						index = $lis.index( $(_this) ),
+						$last = $( dots[ dots.length - 1 ] ),
+						lastIndex = $last.length ? $lis.index( $last ) : false,
+						direction = (function() {
+							if ( index + 6 === lastIndex ) {
+								return 'l';
+							} else if ( index - 6 === lastIndex ) {
+								return 'r';
+							} else if ( index + 1 === lastIndex ) {
+								return 'd';
+							} else if ( index - 1 === lastIndex ) {
+								return 'u';
+							} else {
+								return false;
+							}
+						})();
 
 					if ( dots.length > 0 ) {
-						$last = $( dots[ dots.length - 1 ] );
-						lastIndex = $lis.index( $last );
-
 						// Test if this is an adjacent dot
 						if ( ! (
 							index === lastIndex || // same dot
@@ -145,14 +158,18 @@ var DOTS = (function() {
 							if ( $board.hasClass('inSquare') && ! _activeDotsInSquare() ) {
 								$board.removeClass();
 							}
+
+							$('li', $connectors).eq( -1 === $.inArray(direction, ['r', 'd']) ? index : lastIndex )
+								.removeClass( -1 === $.inArray(direction, ['r', 'l']) ? 'left' : 'top');
+
 							return;
 						}
 					}
 
-					if ( ! $(that).hasClass('active') || index !== lastIndex ) {
+					if ( ! $(_this).hasClass('active') || index !== lastIndex ) {
 						// This dot is awesome! Let's make it active
-						$(that).addClass('active');
-						dots.push( that );
+						$(_this).addClass('active');
+						dots.push( _this );
 						currentNoteIndex++;
 
 						if ( _activeDotsInSquare() ) {
@@ -162,16 +179,21 @@ var DOTS = (function() {
 						} else {
 							_playCurrentNoteIndex();
 						}
+
+						$('li', $connectors).eq( -1 === $.inArray(direction, ['r', 'd']) ? index : lastIndex )
+							.addClass( -1 === $.inArray(direction, ['r', 'l']) ? 'left' : 'top');
 					}
 				})
 				.on('mouseup.dots touchend.dots', function() {
 					flag = false;
 					if ( dots.length > 1 ) {
-						$( _activeDotsInSquare() ? $('.' + color) : dots).trigger('dotRemove');
+						$( _activeDotsInSquare() ? $('#board .' + color) : dots).trigger('dotRemove');
 						_updateGameKeeper();
 					}
 					dots = [];
 					$('li.active', $board).removeClass('active');
+					$('li', $connectors).removeClass();
+					$connectors.removeClass();
 					$board.removeClass('inSquare');
 					colorLock = null;
 					currentNoteIndex = 0;
